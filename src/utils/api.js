@@ -1,1 +1,1 @@
-export const API = 'http://localhost:2000';
+export const API = 'https://day41-pass-reset.herokuapp.com';
