@@ -1,0 +1,56 @@
+body {
+    padding: 0;
+    margin: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(bg2-01.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+form {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 25px;
+    padding: 30px;
+    min-width: 250px;
+    max-width: 380px;
+    animation: 1s ease-in 0s 1 anim;
+}
+
+#icon {
+    color: white;
+    font-size: 80px;
+    padding-bottom: 15px;
+}
+
+label {
+    padding-top: 15px;
+    font-size: 18px;
+}
+
+#link {
+    background-color: transparent;
+    padding: 15px 0px;
+    border: none;
+    text-decoration: underline;
+    color: white;
+}
+
+#submit {
+    width: 100px;
+    font-weight: bold;
+}
+
+@keyframes anim {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
