@@ -1,1 +1,1 @@
-export const API = 'https://day41-pass-reset.herokuapp.com';
+export const API = 'https://pass-reset-flow.onrender.com';
