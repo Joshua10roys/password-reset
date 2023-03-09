@@ -1,14 +1,13 @@
 import './style.css'
 import { useNavigate } from 'react-router-dom';
 import { IoHomeSharp } from 'react-icons/io5';
-import Cookies from 'js-cookie';
 
 export default function Home() {
 
     const navigate = useNavigate();
 
     const logout = () => {
-        Cookies.remove('authToken', { path: "/", domain: "localhost" });
+        localStorage.clear();
         navigate('/login');
     }
 
@@ -29,7 +28,7 @@ export default function Home() {
                     You are Logged in to home page
                 </p>
                 <p className="text-white text-center">
-                    Authentication token was sent and stored as cookie
+                    Authentication token was sent and stored in localStorage
                 </p>
 
                 {/* submit buton */}

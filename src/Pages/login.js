@@ -26,8 +26,11 @@ export default function Login() {
             fetch(`${API}/login`, {
                 method: "POST",
                 body: JSON.stringify(value),
-                credentials: "include",
-                headers: { "Content-Type": "application/json", },
+                // credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                    "withCredentials": "true",
+                },
             })
                 .then(res => res.json())
                 .then((res) => {
@@ -35,6 +38,7 @@ export default function Login() {
                     formik.resetForm();
                     alert(res.msg);
                     if (res.status === 200 && res.status <= 300) {
+                        localStorage.setItem("authToken", res.token)
                         navigate("/home");
                     }
                 })

@@ -4,19 +4,18 @@ import Login from './Pages/login.js';
 import Register from './Pages/register.js';
 import Reset from './Pages/reset.js';
 import ForgotPass from './Pages/forgotPass.js';
-import Cookies from 'js-cookie';
 
 function App() {
 
   const PrivateRoute = () => {
     return (
-      Cookies.get("authToken") ? <Outlet /> : <Navigate to='/login' />
+      localStorage.getItem("authToken") ? <Outlet /> : <Navigate to='/login' />
     )
   }
 
   const PublicRoute = () => {
     return (
-      Cookies.get("authToken") ? <Navigate to='/home' /> : <Outlet />
+      localStorage.getItem("authToken") ? <Navigate to='/home' /> : <Outlet />
     )
   }
 
