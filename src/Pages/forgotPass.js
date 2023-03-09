@@ -2,38 +2,41 @@ import './style.css'
 import { useNavigate } from 'react-router-dom';
 import { TbMailForward } from 'react-icons/tb';
 import { useFormik } from "formik";
+import { useState } from 'react';
 import { API } from '../utils/api.js';
 
 
 export default function ForgotPass() {
 
-    // navigation hook
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
-    // formik hook
     const formik = useFormik({
 
-        // initial values
         initialValues: {
             email: "",
         },
 
-        // on submit
-        onSubmit: (value, { resetForm }) => {
+        onSubmit: (value) => {
 
-            try {
-                fetch(`${API}/forgotPassword`, {
-                    method: "POST",
-                    body: JSON.stringify(value),
-                    headers: { "Content-Type": "application/json" }
+            setLoading(true);
+            fetch(`${API}/forgotPassword`, {
+                method: "POST",
+                body: JSON.stringify(value),
+                headers: { "Content-Type": "application/json" }
+            })
+                .then(res => res.json())
+                .then((res) => {
+                    alert(res.msg);
+                    formik.resetForm();
+                    setLoading(false);
+                    res.status === 200 && navigate('/login')
                 })
-                    .then(resetForm(value))
-                    .then(res => res.json())
-                    .then((res) => {
-                        alert(res.msg);
-                        res.status === 200 && navigate('/login')
-                    })
-            } catch (error) { throw (error) }
+                .catch(err => {
+                    alert(err.message);
+                    formik.resetForm();
+                    setLoading(false);
+                })
         }
     })
 
@@ -58,12 +61,18 @@ export default function ForgotPass() {
 
                     {/* submit buton */}
                     <div className="d-flex justify-content-center pt-5">
-                        <button type="submit" id="submit" className="btn btn-light btn-sm">Send Mail</button>
+                        <button type="submit" id="submit2" className="btn btn-light btn-sm">
+                            {loading && <span className="spinner-border spinner-border-sm text-dark me-1" />}
+                            <span>Send Mail</span>
+                        </button>
                     </div>
 
                     {/* back buton */}
                     <div>
-                        <button onClick={() => navigate('/login')} type="button" id="link" className="btn btn-light pb-0">back</button>
+                        <button onClick={() => navigate('/login')} type="button" id="link"
+                            className="btn btn-light pb-0">
+                            back
+                        </button>
                     </div>
 
                 </div>

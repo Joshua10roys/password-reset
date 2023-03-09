@@ -3,15 +3,15 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { RiLockPasswordFill } from 'react-icons/ri';
 import { useFormik } from "formik";
+import { useState } from 'react';
 import { API } from '../utils/api.js';
 
 export default function Reset() {
 
-    // navigation hook
-    const navigate = useNavigate();
 
-    // params hook
-    const { string } = useParams();
+    const navigate = useNavigate();
+    const { resetToken } = useParams();
+    const [loading, setLoading] = useState(false);
 
     // formik hook
     const formik = useFormik({
@@ -20,21 +20,28 @@ export default function Reset() {
             password: "",
         },
 
-        onSubmit: (value, { resetForm }) => {
+        onSubmit: (value) => {
 
-            try {
-                fetch(`${API}/resetPassword`, {
-                    method: "POST",
-                    body: JSON.stringify({ ...value, token: string }),
-                    headers: { "Content-Type": "application/json" }
+            setLoading(true);
+            fetch(`${API}/resetPassword`, {
+                method: "POST",
+                body: JSON.stringify({ ...value, resetToken: resetToken }),
+                headers: { "Content-Type": "application/json" }
+            })
+                .then(res => res.json())
+                .then((res) => {
+                    alert(res.msg);
+                    formik.resetForm();
+                    setLoading(false);
+                    if (res.status === 200 && res.status <= 300) {
+                        navigate('/login');
+                    };
                 })
-                    .then(resetForm(value))
-                    .then(res => res.json())
-                    .then((res) => {
-                        alert(res.msg);
-                        if (res.status === 200 || 410) { navigate('/login') };
-                    })
-            } catch (error) { throw (error) }
+                .catch(err => {
+                    alert(err.message);
+                    formik.resetForm();
+                    setLoading(false);
+                })
         }
     })
 
@@ -60,7 +67,10 @@ export default function Reset() {
 
                     {/* submit buton */}
                     <div className="d-flex justify-content-center pt-5">
-                        <button type="submit" id="submit" className="btn btn-light btn-sm">Submit</button>
+                        <button type="submit" id="submit" className="btn btn-light btn-sm">
+                            {loading && <span className="spinner-border spinner-border-sm text-dark me-1" />}
+                            <span>Submit</span>
+                        </button>
                     </div>
 
                 </div>

@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { IoEnter } from 'react-icons/io5';
 import { useFormik } from "formik";
 import { API } from '../utils/api.js';
+import { useState } from 'react';
 
 export default function Login() {
 
-    // navigation hook
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     // formik hook
     const formik = useFormik({
@@ -19,18 +20,29 @@ export default function Login() {
         },
 
         // on submit
-        onSubmit: (value, { resetForm }) => {
+        onSubmit: async (value) => {
 
-            try {
-                fetch(`${API}/login`, {
-                    method: "POST",
-                    body: JSON.stringify(value),
-                    headers: { "Content-Type": "application/json" }
+            setLoading(true);
+            fetch(`${API}/login`, {
+                method: "POST",
+                body: JSON.stringify(value),
+                credentials: "include",
+                headers: { "Content-Type": "application/json", },
+            })
+                .then(res => res.json())
+                .then((res) => {
+                    setLoading(false);
+                    formik.resetForm();
+                    alert(res.msg);
+                    if (res.status === 200 && res.status <= 300) {
+                        navigate("/home");
+                    }
                 })
-                    .then(resetForm(value))
-                    .then(res => res.json())
-                    .then(res => alert(res.msg))
-            } catch (error) { throw (error) }
+                .catch((err) => {
+                    setLoading(false);
+                    formik.resetForm();
+                    alert(err.message);
+                })
         }
     })
 
@@ -66,7 +78,10 @@ export default function Login() {
 
                     {/* submit buton */}
                     <div className="d-flex justify-content-center pt-2">
-                        <button type="submit" id="submit" className="btn btn-light btn-sm">Login</button>
+                        <button type="submit" id="submit" className="btn btn-light btn-sm">
+                            {loading && <span className="spinner-border spinner-border-sm text-dark me-1" />}
+                            <span>Login</span>
+                        </button>
                     </div>
 
                 </div>
